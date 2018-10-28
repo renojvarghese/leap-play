@@ -1,0 +1,14 @@
+button {
+    position: relative;
+    left: 300px;
+    top: 300px;
+    width: 300px;
+    height: 300px;
+}
+
+button:focus {
+    background: green;
+}
+button[press="true"] {
+    background: blue;
+}
