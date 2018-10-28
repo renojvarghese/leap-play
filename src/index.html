@@ -8,8 +8,17 @@
 
 </style>
 <body>
-    <button id="btn" onclick="alert('click')">Click me</button>
+    <button id="btn">Click me</button>
     <div class="cursor" id="hand1"></div>
     <div class="cursor" id="hand2"></div>
+
+    <script>
+    window.onload = function() {
+    document.getElementById("btn").onclick = function(e, f) {
+        console.log(e);
+    };
+};
+</script>
 </body>
+
 </html>

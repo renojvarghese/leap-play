@@ -48,7 +48,11 @@ const setCursor = (hand, x, y, z) => {
         }
     } else {
         if (hand.willClick && hand.currEl) {
-            hand.currEl.click();
+            let func = hand.currEl.onclick;
+            let e = new MouseEvent("click", { relatedTarget: hand.currEl });
+            e.hand = hand;
+            //console.log(func);
+            func(e);
         }
         hand.willClick = false;
     }

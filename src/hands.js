@@ -1,9 +1,9 @@
 let hue = 30;
-let radius = 20;
-var currEl = null;
-var onPress = false;
-var willClick = true;
-var active = false;
+let radius = 10;
+let currEl = null;
+let onPress = false;
+let willClick = true;
+let active = false;
 
 export default [
     {
@@ -15,10 +15,8 @@ export default [
         radius: radius,
         currEl: null,
         onPress: false,
-        willCLick: true,
-        active: false,
-        x: 0,
-        y: 0
+        willCLick: false,
+        active: false
     },
     {
         hue: 120,
@@ -29,9 +27,7 @@ export default [
         radius: radius,
         currEl: null,
         onPress: false,
-        willCLick: true,
-        active: false,
-        x: 0,
-        y: 0
+        willCLick: false,
+        active: false
     }
 ];
