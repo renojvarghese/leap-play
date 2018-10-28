@@ -2,67 +2,88 @@ import "./scss/main.scss";
 import Leap from "leapjs";
 import activeHands from "./hands";
 
-Leap.loop({ frameEventName: "animationFrame" }, function(frame) {
-    if (frame.hands.length > 0) {
-        for (let i = 0; i < frame.hands.length; i++) {
-            let activeHand = activeHands[i];
-            let cursor = document.getElementById(activeHand.cursor);
-            var position = frame.hands[i].palmPosition;
-            var normalized = frame.interactionBox.normalizePoint(position);
-            var x2 = window.innerWidth * normalized[0];
-            var y2 = window.innerHeight * normalized[2];
-            cursor.style.left = x2 + "px";
-            cursor.style.top = y2 + "px";
-            activeHand.onPress = normalized[1] * 100 < 0;
-            // console.log(x2 + ", " + y2);
-
-            if (x2 && y2) {
-                var el = document.elementFromPoint(x2, y2);
-                if (
-                    el &&
-                    el.id !== "canvas" &&
-                    el.tagName !== "BODY" &&
-                    el.tagName !== "HTML"
-                ) {
-                    if (activeHand.currEl) {
-                        activeHand.currEl.blur();
-                        activeHand.currEl.setAttribute("press", null);
-                        activeHand.currEl = el;
-                        activeHand.currEl.focus();
-                    } else {
-                        activeHand.currEl = el;
-                        activeHand.currEl.focus();
-                    }
-                } else {
-                    if (activeHand.currEl) {
-                        activeHand.currEl.blur();
-                        activeHand.currEl.setAttribute("press", null);
-                        activeHand.currEl = null;
-                    }
-                }
-            }
-            if (activeHand.onPress) {
-                activeHand.willClick = true;
-                activeHand.hue = activeHand.pressHue;
-                if (activeHand.currEl) {
-                    activeHand.currEl.setAttribute("press", true);
-                }
-            } else {
-                if (activeHand.willClick && activeHand.currEl) {
-                    activeHand.currEl.click();
-                }
-                activeHand.willClick = false;
-                activeHand.hue = activeHand.defaultHue;
-            }
+const setCursor = (hand, x, y, z) => {
+    if (!hand.active) {
+        hand.cursor.style.display = "none";
+        if (hand.currEl) {
+            hand.currEl.blur();
+            hand.currEl = null;
+        }
+        hand.willClick = false;
+        hand.press = false;
+        return;
+    }
+    hand.onPress = z < 10;
+    hand.cursor.style.display = "block";
+    hand.cursor.style.left = x + "px";
+    hand.cursor.style.top = y + "px";
+    let el = document.elementFromPoint(x, y);
+    if (
+        el &&
+        el.tagName !== "CANVAS" &&
+        el.tagName !== "BODY" &&
+        el.tagName !== "HTML"
+    ) {
+        if (hand.currEl) {
+            hand.currEl.blur();
+            hand.currEl.setAttribute("press", null);
+            hand.currEl = el;
+            hand.currEl.focus();
+        } else {
+            hand.currEl = el;
+            hand.currEl.focus();
+        }
+    } else {
+        if (hand.currEl) {
+            hand.currEl.blur();
+            hand.currEl.setAttribute("press", null);
+            hand.currEl = null;
         }
     }
 
+    if (hand.onPress) {
+        hand.willClick = true;
+        if (hand.currEl) {
+            hand.currEl.setAttribute("press", true);
+        }
+    } else {
+        if (hand.willClick && hand.currEl) {
+            hand.currEl.click();
+        }
+        hand.willClick = false;
+    }
+};
+Leap.loop({ frameEventName: "animationFrame" }, function(frame) {
+    let i = 0;
+    for (; i < frame.hands.length; i++) {
+        let activeHand = activeHands[i];
+        activeHand.active = true;
+        let cursor = document.getElementById(activeHand.cursorId);
+        activeHand.cursor = cursor;
+        cursor.setAttribute("active-cursor", activeHand.active);
+        let position = frame.hands[i].palmPosition;
+        let normalized = frame.interactionBox.normalizePoint(position);
+        let x = window.innerWidth * normalized[0];
+        let y = window.innerHeight * normalized[2];
+        let z = 100 * normalized[1];
+        setCursor(activeHand, x, y, z);
+    }
+
+    for (; i < activeHands.length; i++) {
+        let activeHand = activeHands[i];
+        activeHands[i].active = false;
+        let cursor = document.getElementById(activeHand.cursorId);
+        activeHand.cursor = cursor;
+        cursor.setAttribute("active-cursor", activeHand.active);
+        setCursor(activeHand, 0, 0);
+    }
+
     // frame.pointables.forEach(function(pointable, i) {
-    //     var position = pointable.stabilizedTipPosition;
-    //     var normalized = frame.interactionBox.normalizePoint(position);
+    //     let position = pointable.stabilizedTipPosition;
+    //     let normalized = frame.interactionBox.normalizePoint(position);
     //
-    //     var x = ctx.canvas.width * normalized[0];
-    //     var y = ctx.canvas.height * normalized[2];
+    //     let x = ctx.canvas.width * normalized[0];
+    //     let y = ctx.canvas.height * normalized[2];
     //
     //     ctx.beginPath();
     //     ctx.arc(x, y, radius, 0, 2 * Math.PI);
@@ -81,11 +102,11 @@ Leap.loop({ frameEventName: "animationFrame" }, function(frame) {
         // if (gesture.type == "keyTap") {
         //     radius = (radius + 5) % 20;
         //
-        //     var position = gesture.position;
-        //     var normalized = frame.interactionBox.normalizePoint(position);
+        //     let position = gesture.position;
+        //     let normalized = frame.interactionBox.normalizePoint(position);
         //
-        //     var x = ctx.canvas.width * normalized[0];
-        //     var y = ctx.canvas.height * (1 - normalized[1]);
+        //     let x = ctx.canvas.width * normalized[0];
+        //     let y = ctx.canvas.height * (1 - normalized[1]);
         //     console.log(x + " , " + y);
         //     let el = document.elementFromPoint(x, y);
         //     if (el) {

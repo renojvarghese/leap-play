@@ -19,6 +19,9 @@
     border-radius: 100%;
     position: absolute;
     background: blue;
+    &[active-cursor="false"] {
+        display: none;
+    }
 }
 #hand1 {
     background: red;
