@@ -1,39 +1,22 @@
 import "./scss/main.scss";
 import Leap from "leapjs";
-import "leapjs-plugins";
-import THREE from "three";
+import activeHands from "./hands";
 
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-
-// ctx.fillStyle = "#a50b5e";
-let hue = 30;
-let radius = 20;
-var currEl = null;
-var onPress = false;
-var willClick = true;
-var on = true;
 Leap.loop({ frameEventName: "animationFrame" }, function(frame) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillStyle = "hsl(" + hue + ", 100%, 50%)";
     if (frame.hands.length > 0) {
-        var position = frame.hands[0].palmPosition;
-        var normalized = frame.interactionBox.normalizePoint(position);
+        for (let i = 0; i < frame.hands.length; i++) {
+            let activeHand = activeHands[i];
+            let cursor = document.getElementById(activeHand.cursor);
+            var position = frame.hands[i].palmPosition;
+            var normalized = frame.interactionBox.normalizePoint(position);
+            var x2 = window.innerWidth * normalized[0];
+            var y2 = window.innerHeight * normalized[2];
+            cursor.style.left = x2 + "px";
+            cursor.style.top = y2 + "px";
+            activeHand.onPress = normalized[1] * 100 < 0;
+            // console.log(x2 + ", " + y2);
 
-        var x = ctx.canvas.width * normalized[0];
-        var y = ctx.canvas.height * normalized[2];
-
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.fill();
-
-        var x2 = window.innerWidth * normalized[0];
-        var y2 = window.innerHeight * normalized[2];
-        onPress = normalized[1] * 100 < 0;
-        // console.log(x2 + ", " + y2);
-        if (on) {
             if (x2 && y2) {
-                canvas.style.display = "none";
                 var el = document.elementFromPoint(x2, y2);
                 if (
                     el &&
@@ -41,36 +24,35 @@ Leap.loop({ frameEventName: "animationFrame" }, function(frame) {
                     el.tagName !== "BODY" &&
                     el.tagName !== "HTML"
                 ) {
-                    if (currEl) {
-                        currEl.blur();
-                        currEl.setAttribute("press", null);
-                        currEl = el;
-                        currEl.focus();
+                    if (activeHand.currEl) {
+                        activeHand.currEl.blur();
+                        activeHand.currEl.setAttribute("press", null);
+                        activeHand.currEl = el;
+                        activeHand.currEl.focus();
                     } else {
-                        currEl = el;
-                        currEl.focus();
+                        activeHand.currEl = el;
+                        activeHand.currEl.focus();
                     }
                 } else {
-                    if (currEl) {
-                        currEl.blur();
-                        currEl.setAttribute("press", null);
-                        currEl = null;
+                    if (activeHand.currEl) {
+                        activeHand.currEl.blur();
+                        activeHand.currEl.setAttribute("press", null);
+                        activeHand.currEl = null;
                     }
                 }
-                canvas.style.display = "block";
             }
-            if (onPress) {
-                willClick = true;
-                hue = 200;
-                if (currEl) {
-                    currEl.setAttribute("press", true);
+            if (activeHand.onPress) {
+                activeHand.willClick = true;
+                activeHand.hue = activeHand.pressHue;
+                if (activeHand.currEl) {
+                    activeHand.currEl.setAttribute("press", true);
                 }
             } else {
-                if (willClick && currEl) {
-                    currEl.click();
+                if (activeHand.willClick && activeHand.currEl) {
+                    activeHand.currEl.click();
                 }
-                willClick = false;
-                hue = 30;
+                activeHand.willClick = false;
+                activeHand.hue = activeHand.defaultHue;
             }
         }
     }
