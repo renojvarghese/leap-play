@@ -1,4 +1,4 @@
-#btn {
+button {
     position: relative;
     left: 300px;
     top: 300px;
@@ -6,10 +6,10 @@
     height: 300px;
 }
 
-#btn:focus {
+button:focus {
     background: green;
 }
-#btn[press="true"] {
+button[press="true"] {
     background: blue;
 }
 
@@ -21,10 +21,17 @@
     top: -100px;
     left: -100px;
     background: gray;
+
+    &[pressing="true"] {
+        background: red;
+    }
     &[active-cursor="false"] {
         display: none;
     }
-}
-#hand1 {
-    background: red;
+    &.blue {
+        background: aqua;
+    }
+    &.pink {
+        background: pink;
+    }
 }

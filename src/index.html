@@ -8,13 +8,19 @@
 
 </style>
 <body>
-    <button id="btn">Click me</button>
+    <button id="btn-pink">Click me</button>
+    <button id="btn-blue">Click me</button>
     <div class="cursor" id="hand1"></div>
     <div class="cursor" id="hand2"></div>
 
     <script>
     window.onload = function() {
-    document.getElementById("btn").onclick = function(e, f) {
+    document.getElementById("btn-pink").onclick = function(e, f) {
+        e.hand.cursor.classList.add("pink");
+        console.log(e);
+    };
+    document.getElementById("btn-blue").onclick = function(e, f) {
+        e.hand.cursor.classList.add("blue");
         console.log(e);
     };
 };

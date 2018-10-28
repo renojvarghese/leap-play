@@ -6,17 +6,13 @@ const setCursor = (hand, x, y, z) => {
     if (!hand.active) {
         hand.cursor.style.display = "none";
         if (hand.currEl) {
-            hand.currEl.blur();
-            hand.currEl = null;
         }
-        hand.willClick = false;
-        hand.press = false;
         return;
     }
-    hand.onPress = z < 10;
     hand.cursor.style.display = "block";
     hand.cursor.style.left = x + "px";
     hand.cursor.style.top = y + "px";
+    hand.onPress = z < 0;
     let el = document.elementFromPoint(x, y);
     if (
         el &&
@@ -42,17 +38,19 @@ const setCursor = (hand, x, y, z) => {
     }
 
     if (hand.onPress) {
+        hand.cursor.setAttribute("pressing", true);
         hand.willClick = true;
         if (hand.currEl) {
             hand.currEl.setAttribute("press", true);
         }
     } else {
+        hand.cursor.setAttribute("pressing", false);
         if (hand.willClick && hand.currEl) {
-            let func = hand.currEl.onclick;
-            let e = new MouseEvent("click", { relatedTarget: hand.currEl });
-            e.hand = hand;
-            //console.log(func);
-            func(e);
+            if (typeof hand.currEl.onclick === "function") {
+                const e = new Event("click");
+                e.hand = hand;
+                hand.currEl.onclick(e);
+            }
         }
         hand.willClick = false;
     }
