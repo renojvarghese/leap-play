@@ -1,0 +1,23 @@
+#canvas {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#btn {
+    position: relative;
+    left: 300px;
+    top: 300px;
+    width: 300px;
+    height: 300px;
+}
+
+#btn:focus {
+    background: green;
+}
+#btn[press="true"] {
+    background: blue;
+}
