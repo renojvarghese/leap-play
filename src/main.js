@@ -12,7 +12,7 @@ const setCursor = (hand, x, y, z) => {
     hand.cursor.style.display = "block";
     hand.cursor.style.left = x + "px";
     hand.cursor.style.top = y + "px";
-    hand.onPress = z < 0;
+    hand.onPress = z < 20;
     let el = document.elementFromPoint(x, y);
     if (
         el &&
@@ -20,9 +20,9 @@ const setCursor = (hand, x, y, z) => {
         el.tagName !== "BODY" &&
         el.tagName !== "HTML"
     ) {
-        if (hand.currEl) {
+        if (hand.currEl && hand.currEl != el) {
             hand.currEl.blur();
-            hand.currEl.setAttribute("press", null);
+            hand.currEl.setAttribute("press", false);
             hand.currEl = el;
             hand.currEl.focus();
         } else {
@@ -32,7 +32,7 @@ const setCursor = (hand, x, y, z) => {
     } else {
         if (hand.currEl) {
             hand.currEl.blur();
-            hand.currEl.setAttribute("press", null);
+            hand.currEl.setAttribute("press", false);
             hand.currEl = null;
         }
     }
@@ -41,11 +41,13 @@ const setCursor = (hand, x, y, z) => {
         hand.cursor.setAttribute("pressing", true);
         hand.willClick = true;
         if (hand.currEl) {
+            hand.currEl.blur();
             hand.currEl.setAttribute("press", true);
         }
     } else {
         hand.cursor.setAttribute("pressing", false);
         if (hand.willClick && hand.currEl) {
+            hand.currEl.focus();
             if (typeof hand.currEl.onclick === "function") {
                 const e = new Event("click");
                 e.hand = hand;
