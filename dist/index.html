@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>LeapJS boilerplate</title>
+<link href="main.css" rel="stylesheet"></head>
+<style>
+
+</style>
+<body>
+    <div class="btn-container">
+        <button id="btn-red"></button>
+        <button id="btn-blue"></button>
+        <button id="btn-green"></button>
+    </div>
+    <div class="cursor" id="hand1"></div>
+    <div class="cursor" id="hand2"></div>
+
+<script>
+//not part of main cursor script
+//just part of demo
+window.onload = function() {
+    document.getElementById("btn-red").onclick = function(e, f) {
+        document.querySelector("body").className = "red";
+        e.hand.cursor.className = "cursor red";
+    };
+    document.getElementById("btn-blue").onclick = function(e, f) {
+        document.querySelector("body").className = "blue";
+        e.hand.cursor.className = "cursor blue";
+    };
+    document.getElementById("btn-green").onclick = function(e, f) {
+        document.querySelector("body").className = "green";
+        e.hand.cursor.className = "cursor green";
+    };
+};
+</script>
+<script type="text/javascript" src="bundle.js"></script></body>
+
+</html>
