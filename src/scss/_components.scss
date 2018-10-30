@@ -1,14 +1,87 @@
+.btn-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    padding: 50px;
+    width: 50vw;
+    height: 50vw;
+    position: relative;
+    &:before {
+        content: "";
+        width: 50%;
+        height: 50%;
+        border: 20px solid gray;
+        border-radius: 100%;
+        position: absolute;
+        top: 20%;
+    }
+}
 button {
     position: relative;
-    left: 300px;
-    top: 300px;
-    width: 300px;
-    height: 300px;
+    width: 45%;
+    height: 45%;
+    border-radius: 100%;
+    border: none;
+    &:focus {
+        outline: 0;
+    }
 }
-
-button:focus {
-    background: green;
+@mixin shade($color, $name, $body, $c, $a, $b, $p) {
+    #btn-#{$name} {
+        background: $color;
+        &:focus {
+            background: $color * 0.9;
+        }
+        &[press="true"] {
+            background: $color * 0.6;
+        }
+    }
+    body#{"." + $name} {
+        background: $body;
+    }
+    .cursor#{"." + $name} {
+        background: $c;
+        &:before {
+            border-color: $b;
+        }
+        &:after {
+            border-color: $b;
+        }
+        &[pressing="true"] {
+            background: $p;
+        }
+    }
+    body#{"." + $name} .btn-container {
+        &:before {
+            border-color: $color;
+        }
+    }
 }
-button[press="true"] {
-    background: blue;
-}
+@include shade(
+    $btn-red,
+    "red",
+    $body-red,
+    $cursor-red,
+    $after-cursor-red,
+    $before-cursor-red,
+    $pressing-red
+);
+@include shade(
+    $btn-blue,
+    "blue",
+    $body-blue,
+    $cursor-blue,
+    $after-cursor-blue,
+    $before-cursor-blue,
+    $pressing-blue
+);
+@include shade(
+    $btn-green,
+    "green",
+    $body-green,
+    $cursor-green,
+    $after-cursor-green,
+    $before-cursor-green,
+    $pressing-green
+);

@@ -1,2 +1,6 @@
+@import "variables";
 @import "components";
 @import "cursors";
+* {
+    transition: all 0.2s ease;
+}
