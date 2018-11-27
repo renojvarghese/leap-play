@@ -81,41 +81,4 @@ Leap.loop({ frameEventName: "animationFrame" }, function(frame) {
         cursor.setAttribute("active-cursor", activeHand.active);
         setCursor(activeHand, 0, 0);
     }
-
-    // frame.pointables.forEach(function(pointable, i) {
-    //     let position = pointable.stabilizedTipPosition;
-    //     let normalized = frame.interactionBox.normalizePoint(position);
-    //
-    //     let x = ctx.canvas.width * normalized[0];
-    //     let y = ctx.canvas.height * normalized[2];
-    //
-    //     ctx.beginPath();
-    //     ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    //     ctx.fill();
-    //     let x2 = x;
-    //     let y2 = y;
-    //     let z2 = 0;
-    //     if (i == 1) {
-    //     }
-    // });
-    //
-    frame.gestures.forEach(function(gesture) {
-        if (gesture.type == "swipe") {
-            console.log(gesture);
-        }
-        // if (gesture.type == "keyTap") {
-        //     radius = (radius + 5) % 20;
-        //
-        //     let position = gesture.position;
-        //     let normalized = frame.interactionBox.normalizePoint(position);
-        //
-        //     let x = ctx.canvas.width * normalized[0];
-        //     let y = ctx.canvas.height * (1 - normalized[1]);
-        //     console.log(x + " , " + y);
-        //     let el = document.elementFromPoint(x, y);
-        //     if (el) {
-        //         el.click();
-        //     }
-        // }
-    });
 });
